@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      checkerboardOffscreenLayers: true,
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: HomePage(),
