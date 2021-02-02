@@ -1,5 +1,6 @@
 import 'package:convertCoin/models/currency_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 
 class HomeController {
 
@@ -32,6 +33,7 @@ class HomeController {
       returnValue = value * toCurrency.bitcoin;
     }
 
+    toText.text = value.toStringAsFixed(toCurrency.decimals);
     fromText.text = returnValue.toStringAsFixed(fromCurrency.decimals);
 
   }

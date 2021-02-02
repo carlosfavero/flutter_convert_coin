@@ -16,11 +16,14 @@ class CurrencyRow extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-            height: 56,
+            height: 60,
             child: DropdownButton<CurrencyModel>(
                 iconEnabledColor: Colors.amber,
                 iconSize: 42,
                 isExpanded: true,
+                style: TextStyle(
+                  fontSize: 24,
+                ),
                 underline: Container(
                   height: 1,
                   color: Colors.amber,
@@ -37,12 +40,19 @@ class CurrencyRow extends StatelessWidget {
           width: 20,
         ),
         Expanded(
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.amber),
+          flex: 1,
+          child: SizedBox(
+            height: 60,
+            child: TextField(
+              style: TextStyle(
+                fontSize: 24,
+              ),
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amber),
+                ),
               ),
             ),
           ),

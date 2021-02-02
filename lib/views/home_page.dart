@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   CurrencyHelper _currencyHelper = CurrencyHelper();
   Future<List<CurrencyInfo>> _currency;
   List<CurrencyInfo> _current;
-
+  
   final TextEditingController toText = TextEditingController();
   final TextEditingController fromText = TextEditingController();
   HomeController homeController;
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                           onChanged: (model) {
                             setState(() {
                               homeController.toCurrency = model;
-                              convert(context);
+                              //convert(context);
                             });
                           },
                         ),
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           onChanged: (model) {
                             setState(() {
                               homeController.fromCurrency = model;
-                              convert(context);
+                              //convert(context);
                             });
                           },
                         ),
@@ -118,50 +118,69 @@ class _HomePageState extends State<HomePage> {
                   _current = snapshot.data;
                   return ListView(
                     children: snapshot.data.map<Widget>((currency) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(24, 0, 12, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  currency.toCurrency,
-                                  style: TextStyle(
-                                    color: Colors.white,
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width/3),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    currency.toCurrency,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  currency.toText,
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                  SizedBox(width: 10,),
+                                  Text(
+                                    currency.toText,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  currency.fromCurrency,
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    currency.fromCurrency,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  currency.fromText,
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                  SizedBox(width: 10,),
+                                  Text(
+                                    currency.fromText,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 10,),
-                                FlatButton(
-                                  onPressed: () {
-                                    onDelete(currency.id);
-                                  },
-                                  child: Icon(Icons.delete)
-                                ),
-                              ]
-                            )
+                                  SizedBox(width: 10,),                                
+                                ]
+                              ),
+                            ),
+                            SizedBox(
+                              width: (MediaQuery.of(context).size.width/3)-36,
+                              child: Column(
+                                children: [
+                                  FlatButton(
+                                    onPressed: () {
+                                      onDelete(currency.id);
+                                    },
+                                    child: Icon(Icons.delete)
+                                  ),
+                                ],
+                              ),
+                            ),
                           ]
                         ),
                       );
@@ -177,8 +196,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void convert(BuildContext context) {
-    homeController.convert();
-    onSave();
+    if(toText.text!=''){
+      homeController.convert();
+      onSave();
+    } else {
+      fromText.text = '';
+    }
     FocusScope.of(context).unfocus();
   }
 
