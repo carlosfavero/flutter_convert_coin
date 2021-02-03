@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 class CurrencyRow extends StatelessWidget {
 
   final List<CurrencyModel> items;
-  final CurrencyModel selectedItem; 
+  final CurrencyModel selectedItem;   
   final TextEditingController controller;
   final void Function(CurrencyModel) onChanged;
-  const CurrencyRow({Key key, this.items, this.controller, this.onChanged, this.selectedItem}) : super(key: key);
+  final bool enabled;
+  final String prefix;
+  final String sufix;
+  const CurrencyRow({Key key, this.items, this.controller, this.onChanged, this.selectedItem, this.enabled, this.prefix, this.sufix}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,44 +18,78 @@ class CurrencyRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: SizedBox(
-            height: 60,
-            child: DropdownButton<CurrencyModel>(
-                iconEnabledColor: Colors.amber,
-                iconSize: 42,
-                isExpanded: true,
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-                underline: Container(
-                  height: 1,
-                  color: Colors.amber,
-                ),
-                value: selectedItem,
-                items: items
-                  .map((e) => DropdownMenuItem(value: e, child:Text(e.name)))
-                  .toList(),
-                onChanged: onChanged
+          flex: 2,          
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(color: Colors.amber, style: BorderStyle.solid, width: 0.80),
+            ),
+            child:DropdownButton<CurrencyModel>(
+              iconEnabledColor: Colors.amber,
+              iconSize: 40,
+              isExpanded: true,
+              style: TextStyle(                
+                fontSize: 18,
               ),
+              underline: Container(
+                height: 0,
+                color: Colors.amber,
+              ),
+              value: selectedItem,
+              items: items.map((e) => DropdownMenuItem(value: e, child:Text(e.name))).toList(),
+              onChanged: onChanged
+            ),
           ),
         ),
-        SizedBox(
-          width: 20,
-        ),
+        SizedBox( width: 10,),
         Expanded(
-          flex: 1,
+          flex: 3,          
           child: SizedBox(
-            height: 60,
             child: TextField(
+              cursorColor: Colors.amber,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
               ),
               controller: controller,
               keyboardType: TextInputType.number,
+              textAlign: TextAlign.right,
+              enabled: enabled,
               decoration: InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber),
+                suffix: Text(
+                  sufix,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
+                prefix: Text(prefix,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                contentPadding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Colors.amber, 
+                    width: 1.0,                    
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Colors.amber, 
+                    width: 1.0,                    
+                  ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: Colors.amber, 
+                    width: 1.0,                    
+                  ),
+                ),
+                
               ),
             ),
           ),

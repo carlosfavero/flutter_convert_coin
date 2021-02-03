@@ -8,6 +8,7 @@ final String columnToCurrency = 'tocurrency';
 final String columnFromCurrency = 'fromcurrency';
 final String columnToText = 'totext' ;
 final String columnFromText = 'fromtext';
+final String columnDateTime = 'datetime';
 
 class CurrencyHelper {
   static Database _database;
@@ -42,7 +43,8 @@ class CurrencyHelper {
             $columnToCurrency TEXT NOT NULL,
             $columnFromCurrency TEXT NOT NULL,
             $columnToText  TEXT NOT NULL,
-            $columnFromText TEXT NOT NULL
+            $columnFromText TEXT NOT NULL,
+            $columnDateTime TEXT NOT NULL
           )
         ''');
       },
