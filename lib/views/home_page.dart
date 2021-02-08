@@ -2,6 +2,7 @@ import 'package:convertCoin/controllers/home_controller.dart';
 import 'package:convertCoin/database/currency_helper.dart';
 import 'package:convertCoin/models/currency_info.dart';
 import 'package:convertCoin/views/components/currency_row.dart';
+import 'package:convertCoin/views/cotacao_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   CurrencyHelper _currencyHelper = CurrencyHelper();
-  Future<List<CurrencyInfo>> _currency;
+  List<CurrencyInfo> _currency = List<CurrencyInfo>();
   
   final TextEditingController toText = TextEditingController();
   final TextEditingController fromText = TextEditingController();
@@ -28,14 +29,32 @@ class _HomePageState extends State<HomePage> {
     homeController = HomeController(toText: toText, fromText: fromText);
   }
 
-  void loadCurrency() async {
-    _currency = _currencyHelper.getCurrency();
-    setState(() {});
+  Future loadCurrency() async {
+    _currency = await _currencyHelper.getCurrency();
+    setState(() {
+      
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CotacaoPage()
+                ),
+              );
+            }
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Flexible(
@@ -55,8 +74,8 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: Image.asset(
                           'assets/images/exchange.png',
-                          width: 130,
-                          height: 130,
+                          width: 120,
+                          height: 120,
 
                         ),
                       ),
@@ -136,106 +155,107 @@ class _HomePageState extends State<HomePage> {
           ),
           Flexible(
             flex: 1,
-            child: FutureBuilder<List<CurrencyInfo>>(
-              future: _currency,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView(
-                    children: snapshot.data.map<Widget>((currency) {
-                      var alarmTime = DateFormat('dd/MM/yyyy hh:mm aa').format(currency.dateTime);
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                        child: Column(
-                          children: <Widget>[
-                            Row(                            
+            child: ListView.builder(
+              itemCount: _currency.length,
+              itemBuilder: (context, index) {
+                final currency = _currency[index];
+                var alarmTime = DateFormat('dd/MM/yyyy hh:mm aa').format(currency.dateTime);
+                return Dismissible(
+                  background: Container(color: Colors.red),
+                  key: Key(currency.id.toString()),
+                  onDismissed: (direction) {
+                    onDelete(currency.id);
+                    // setState(() {
+                    //   _currency.removeAt(index);
+                    // });                    
+                  },
+                  child:Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(                            
+                          children: [
+                            Text(alarmTime),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
                               children: [
-                                Text(alarmTime),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            currency.toCurrency,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            currency.toText,
-                                            style: TextStyle(
-                                              color: Colors.amber,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ],
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        currency.toCurrency,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            currency.fromCurrency,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            currency.fromText,
-                                            style: TextStyle(
-                                              color: Colors.amber,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),                                
-                                        ]
+                                      SizedBox(width: 10,),
+                                      Text(
+                                        currency.toText,
+                                        style: TextStyle(
+                                          color: Colors.amber,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        children: [
-                                          FlatButton(
-                                            onPressed: () {
-                                              onDelete(currency.id);
-                                            },
-                                            child: Icon(
-                                              Icons.delete,
-                                              color: Colors.amber,
-                                            )
-                                          ),
-                                        ],
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        currency.fromCurrency,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(width: 10,),
+                                      Text(
+                                        currency.fromText,
+                                        style: TextStyle(
+                                          color: Colors.amber,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),                                
+                                    ]
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    children: [
+                                      FlatButton(
+                                        onPressed: () {
+                                          onDelete(currency.id);
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.amber,
+                                        )
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                              
-                              
-                            ]
-                          // ),
+                          ],
                         ),
-                      );
-                    }).toList(),
-                  );
-                }
-                return Text('No data');
-              }),
-          ),
-        ],
+                      ]
+                    ),
+                  )
+                );
+              })
+            )
+          ],
       ),
     );
   }
